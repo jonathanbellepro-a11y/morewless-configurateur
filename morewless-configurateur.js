@@ -735,542 +735,629 @@ class MorewlessConfigurator extends HTMLElement {
 
     /* RESPONSIVE */
     @media (max-width: 1200px) {
-      .mwl-services-grid { grid-template-columns: repeat(3, 1fr); }
+      .mwl-services-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
     }
-    @media (max-width: 900px) {
-      .mwl-intro-grid { flex-direction: column; gap: 24px; }
-      .mwl-intro-left { flex: none; max-width: 100%; }
-      .mwl-intro-left h2 { font-size: 32px; }
-      .mwl-answers-grid { grid-template-columns: repeat(2, 1fr); }
-      .mwl-services-grid { grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: 992px) {
+      .mwl-intro-grid {
+        flex-direction: column;
+        gap: 24px;
+      }
+      .mwl-intro-left {
+        flex: 1;
+        max-width: 100%;
+      }
+      .mwl-intro-left h2 {
+        font-size: 32px;
+      }
+      .mwl-answers-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .mwl-services-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .mwl-price-grid {
+        grid-template-columns: 1fr;
+      }
+      .mwl-contact-form {
+        grid-template-columns: 1fr;
+      }
     }
-    @media (max-width: 600px) {
-      :host { padding: 16px 12px; }
-      .mwl-intro-left h2,
-      .mwl-question-text,
-      .mwl-services-header h2,
-      .mwl-price-header h2 { font-size: 24px; }
-      .mwl-answers-grid { grid-template-columns: 1fr; }
-      .mwl-services-grid { grid-template-columns: 1fr; }
-      .mwl-question-card,
-      .mwl-recommendation-card,
-      .mwl-price-card { padding: 20px; }
-      .mwl-recommendation-actions,
-      .mwl-services-actions { flex-direction: column; }
-      .mwl-price-actions { flex-direction: column; }
-      .mwl-price-grid { grid-template-columns: 1fr; }
+    @media (max-width: 576px) {
+      :host {
+        padding: 16px;
+      }
+      .mwl-intro-left h2 {
+        font-size: 28px;
+      }
+      .mwl-question-text {
+        font-size: 24px;
+      }
+      .mwl-answers-grid {
+        grid-template-columns: 1fr;
+      }
+      .mwl-services-grid {
+        grid-template-columns: 1fr;
+      }
+      .mwl-price-header h2 {
+        font-size: 36px;
+      }
       .mwl-price-total {
         flex-direction: column;
         gap: 12px;
+      }
+      .mwl-price-total-left {
         text-align: center;
       }
-      .mwl-price-total-left { text-align: center; }
-      .mwl-contact-form { grid-template-columns: 1fr; }
-      .mwl-contact-card { padding: 24px 20px; }
     }
     `;
-  }
-
-  // ============================================
-  // HTML TEMPLATE
-  // ============================================
-  getTemplate() {
-    return `
-    <div class="mwl-container">
-      <div class="mwl-progress-container">
-        <div class="mwl-progress-bar">
-          <div class="mwl-progress-fill" id="progressFill" style="width: 0%"></div>
-        </div>
-      </div>
-
-      <div class="mwl-screen active" id="screen-intro">
-        <div class="mwl-intro-grid">
-          <div class="mwl-intro-left">
-            <h2>Decrivez-moi votre projet en quelques lignes.</h2>
-            <p>Plus vous detaillez, plus mes recommandations seront precises.</p>
-          </div>
-          <div class="mwl-intro-right">
-            <div class="mwl-textarea-wrapper">
-              <textarea class="mwl-textarea" id="projectDescription"
-                placeholder="Ex: Je lance un food truck de burgers a Bruxelles. J'ai besoin de visibilite pour attirer de nouveaux clients."></textarea>
-            </div>
-            <button class="mwl-btn mwl-btn-primary" id="btnStart">Suivant</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="mwl-screen" id="screen-loading">
-        <div class="mwl-loading">
-          <div class="mwl-spinner"></div>
-          <p>Analyse de votre projet...</p>
-        </div>
-      </div>
-
-      <div class="mwl-screen" id="screen-questions">
-        <div class="mwl-question-card" id="questionCard">
-          <div class="mwl-question-number" id="questionNumber">Question 1 / 4</div>
-          <div class="mwl-question-text" id="questionText">Chargement...</div>
-          <div class="mwl-answers-grid" id="answersContainer"></div>
-          <div class="mwl-question-nav">
-            <button class="mwl-btn mwl-btn-back" id="btnBack">Retour</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="mwl-screen" id="screen-recommendation">
-        <div class="mwl-recommendation-card">
-          <div class="mwl-recommendation-label">Recommandation personnalisee</div>
-          <div class="mwl-recommendation-text" id="recommendationText">Chargement...</div>
-          <div class="mwl-recommendation-actions">
-            <button class="mwl-btn mwl-btn-primary" id="btnGoToServices">Voir les services recommandes</button>
-            <button class="mwl-btn mwl-btn-outline" id="btnBackToQuestions">Modifier mes reponses</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="mwl-screen" id="screen-services">
-        <div class="mwl-services-header">
-          <h2>Services recommandes pour votre projet</h2>
-          <p>Cochez ou decochez les services qui vous interessent</p>
-        </div>
-        <div class="mwl-services-grid" id="servicesGrid"></div>
-        <div class="mwl-services-actions">
-          <button class="mwl-btn mwl-btn-primary" id="btnGoToPrice">Voir mon estimation</button>
-          <button class="mwl-btn mwl-btn-outline" id="btnBackToRec">Retour</button>
-        </div>
-      </div>
-
-      <div class="mwl-screen" id="screen-price">
-        <div class="mwl-price-card">
-          <div class="mwl-price-header">
-            <h2>Votre estimation</h2>
-            <p>Voici ce qui est prioritaire pour votre projet</p>
-          </div>
-          <div class="mwl-price-grid">
-            <div class="mwl-price-section priority-high">
-              <div class="mwl-price-section-header">
-                <span class="mwl-price-section-label">Prioritaire</span>
-                <span class="mwl-price-section-badge">Essentiel</span>
-              </div>
-              <div class="mwl-price-section-amount" id="pricePriority">-</div>
-              <div class="mwl-price-section-detail" id="pricePriorityDetail">-</div>
-            </div>
-            <div class="mwl-price-section priority-medium">
-              <div class="mwl-price-section-header">
-                <span class="mwl-price-section-label">Secondaire</span>
-                <span class="mwl-price-section-badge">Optionnel</span>
-              </div>
-              <div class="mwl-price-section-amount" id="priceSecondary">-</div>
-              <div class="mwl-price-section-detail" id="priceSecondaryDetail">-</div>
-            </div>
-            <div class="mwl-price-section priority-low">
-              <div class="mwl-price-section-header">
-                <span class="mwl-price-section-label">Chaque mois</span>
-                <span class="mwl-price-section-badge">Abonnement</span>
-              </div>
-              <div class="mwl-price-section-amount" id="priceMonthly">-</div>
-              <div class="mwl-price-section-detail" id="priceMonthlyDetail">-</div>
-            </div>
-          </div>
-          <div class="mwl-price-total">
-            <div class="mwl-price-total-left">
-              <div class="mwl-price-total-label">Investissement total</div>
-              <div class="mwl-price-total-amount" id="priceTotal">-</div>
-              <div class="mwl-price-total-detail" id="priceTotalDetail">-</div>
-            </div>
-            <button class="mwl-price-total-btn" id="btnGoToContact">Demander mon pre-devis</button>
-          </div>
-          <p class="mwl-price-disclaimer">
-            Cette estimation est indicative. Le prix final est confirme apres verification des besoins, contenus disponibles et contraintes techniques.
-          </p>
-          <div class="mwl-price-actions">
-            <button class="mwl-btn mwl-btn-outline" id="btnBackToServices">Modifier mes choix</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="mwl-screen" id="screen-contact">
-        <div class="mwl-contact-card">
-          <div class="mwl-contact-header">
-            <h2>Demander mon pre-devis</h2>
-            <p>Laissez-nous vos coordonnees, nous vous recontactons sous 24h</p>
-          </div>
-          <form class="mwl-contact-form" id="contactForm">
-            <div class="mwl-form-group">
-              <label class="mwl-form-label">Prenom et nom <span class="required">*</span></label>
-              <input type="text" class="mwl-form-input" id="contactName" placeholder="Saisissez votre prenom" required>
-            </div>
-            <div class="mwl-form-group">
-              <label class="mwl-form-label">E-mail <span class="required">*</span></label>
-              <input type="email" class="mwl-form-input" id="contactEmail" placeholder="Saisissez votre e-mail" required>
-            </div>
-            <div class="mwl-form-group">
-              <label class="mwl-form-label">Telephone <span class="required">*</span></label>
-              <input type="tel" class="mwl-form-input" id="contactPhone" placeholder="Saisissez votre numero de telephone" required>
-            </div>
-            <div class="mwl-form-group">
-              <label class="mwl-form-label">Votre site / reseaux sociaux <span class="required">*</span></label>
-              <input type="text" class="mwl-form-input" id="contactSite" placeholder="Repondez en quelques mots" required>
-            </div>
-            <div class="mwl-contact-actions">
-              <button type="submit" class="mwl-btn mwl-btn-primary" id="btnSubmitContact">Envoyer</button>
-            </div>
-          </form>
-          <div class="mwl-contact-back">
-            <button class="mwl-btn-back" id="btnBackToPrice">Retour a l'estimation</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    `;
-  }
-
-  render() {
-    this.shadowRoot.innerHTML = `<style>${this.getStyles()}</style>${this.getTemplate()}`;
   }
 
   // ============================================
   // DONNEES
   // ============================================
-  get SERVICES() {
-    return {
-      landingPage: { id: 'landingPage', title: 'Landing page', description: 'Page unique optimisee pour convertir vos visiteurs en clients.', prixMin: 800, prixMax: 2500, type: 'one-shot', recommended: true, priority: 'high' },
-      reseauxSociaux: { id: 'reseauxSociaux', title: 'Reseaux sociaux', description: 'Gestion complete de vos comptes sociaux et community management.', prixMin: 400, prixMax: 1200, type: 'monthly', recommended: true, priority: 'low' },
-      contenu: { id: 'contenu', title: 'Creation de contenu', description: 'Posts, carrousels, stories et visuels sur-mesure pour vos reseaux.', prixMin: 300, prixMax: 900, type: 'monthly', recommended: true, priority: 'low' },
-      video: { id: 'video', title: 'Video courte', description: 'Reels, TikTok, Shorts et videos promotionnelles impactantes.', prixMin: 500, prixMax: 1500, type: 'one-shot', recommended: true, priority: 'high' },
-      metaAds: { id: 'metaAds', title: 'Campagne Meta Ads', description: 'Publicite ciblee sur Facebook et Instagram pour toucher vos clients.', prixMin: 300, prixMax: 800, type: 'monthly', recommended: true, priority: 'low' },
-      siteWeb: { id: 'siteWeb', title: 'Site web', description: 'Site vitrine ou e-commerce complet, responsive et optimise SEO.', prixMin: 2000, prixMax: 8000, type: 'one-shot', recommended: false, priority: 'medium' },
-      automatisation: { id: 'automatisation', title: 'Automatisation', description: 'Workflows automatises pour gagner du temps au quotidien.', prixMin: 500, prixMax: 2000, type: 'one-shot', recommended: false, priority: 'medium' },
-      iaWhatsapp: { id: 'iaWhatsapp', title: 'Assistant IA / WhatsApp', description: 'Chatbot intelligent pour repondre a vos clients 24/7.', prixMin: 300, prixMax: 1000, type: 'monthly', recommended: false, priority: 'low' },
-      imprimes: { id: 'imprimes', title: 'Supports imprimes', description: 'Flyers, cartes de visite, menus et tout support papier.', prixMin: 150, prixMax: 600, type: 'one-shot', recommended: false, priority: 'medium' },
-      identite: { id: 'identite', title: 'Identite visuelle', description: 'Logo, charte graphique et elements de base de votre marque.', prixMin: 600, prixMax: 1800, type: 'one-shot', recommended: false, priority: 'high' }
-    };
-  }
-
-  get simulatedQuestions() {
+  getQuestions() {
     return [
-      { id: 'q1', text: 'Votre projet est-il deja lance ?', answers: ['Deja actif', 'Lancement prochain', 'En preparation'] },
-      { id: 'q2', text: 'Avez-vous deja une presence en ligne ?', answers: ['Site web + reseaux', 'Pas structure', 'Je pars de zero'] },
-      { id: 'q3', text: 'Quel est votre objectif principal ?', answers: ['Visibilite', 'Plus de demandes', 'Vendre plus', 'Gagner du temps', 'Moderniser'] },
-      { id: 'q4', text: 'Besoin de contenus visuels ?', answers: ['Photos', 'Videos', 'Reels / Shorts', 'Visuels reseaux', 'Pas encore'] }
+      {
+        question: "Quel est votre objectif principal ?",
+        answers: [
+          "Augmenter mes ventes en ligne",
+          "Ameliorer ma visibilite sur internet",
+          "Automatiser mes processus internes",
+          "Lancer un nouveau produit ou service",
+          "Fideliser ma clientele existante",
+          "Je ne sais pas encore, j'ai besoin de conseils"
+        ]
+      },
+      {
+        question: "Quel est votre budget approximatif ?",
+        answers: [
+          "Moins de 2 000 EUR",
+          "Entre 2 000 et 5 000 EUR",
+          "Entre 5 000 et 10 000 EUR",
+          "Entre 10 000 et 25 000 EUR",
+          "Plus de 25 000 EUR",
+          "Je prefere en discuter"
+        ]
+      },
+      {
+        question: "Quel est votre delai souhaite ?",
+        answers: [
+          "Urgent (moins d'1 mois)",
+          "Rapide (1 a 3 mois)",
+          "Standard (3 a 6 mois)",
+          "Sans pression (plus de 6 mois)",
+          "Je ne sais pas encore"
+        ]
+      },
+      {
+        question: "Avez-vous deja une presence en ligne ?",
+        answers: [
+          "Oui, un site web existant",
+          "Oui, des reseaux sociaux actifs",
+          "Non, je pars de zero",
+          "J'ai un peu de tout mais c'est desordonne"
+        ]
+      },
+      {
+        question: "Quel type de contenu souhaitez-vous produire ?",
+        answers: [
+          "Videos promotionnelles",
+          "Photos professionnelles",
+          "Contenu pour reseaux sociaux",
+          "Site web complet",
+          "Publicites en ligne",
+          "Tout ce qui est necessaire"
+        ]
+      }
     ];
   }
 
-  get simulatedRecommendation() {
-    return "Super projet. Pour un food truck de burgers a Bruxelles, la visibilite locale est essentielle. Instagram peut aider a donner envie avec de belles photos, une landing page peut presenter vos emplacements et une campagne Meta Ads peut toucher les bonnes personnes autour de vos zones de passage.";
+  getServices() {
+    return [
+      {
+        id: "site-vitrine",
+        title: "Site Vitrine",
+        description: "Presentation elegante de votre activite avec design sur mesure.",
+        price: "A partir de 1 490 EUR",
+        badge: "Populaire",
+        priority: "high"
+      },
+      {
+        id: "site-ecommerce",
+        title: "Site E-commerce",
+        description: "Boutique en ligne complete avec paiement securise.",
+        price: "A partir de 2 990 EUR",
+        badge: "",
+        priority: "high"
+      },
+      {
+        id: "site-sur-mesure",
+        title: "Site Sur Mesure",
+        description: "Solution web entierement personnalisee selon vos besoins.",
+        price: "Sur devis",
+        badge: "",
+        priority: "medium"
+      },
+      {
+        id: "seo-referencement",
+        title: "SEO & Referencement",
+        description: "Optimisation pour les moteurs de recherche et visibilite.",
+        price: "A partir de 490 EUR/mois",
+        badge: "",
+        priority: "medium"
+      },
+      {
+        id: "reseaux-sociaux",
+        title: "Reseaux Sociaux",
+        description: "Gestion et animation de vos comptes sociaux.",
+        price: "A partir de 390 EUR/mois",
+        badge: "",
+        priority: "medium"
+      },
+      {
+        id: "publicites-en-ligne",
+        title: "Publicites en Ligne",
+        description: "Campagnes Google Ads et Meta Ads optimisees.",
+        price: "A partir de 490 EUR/mois",
+        badge: "",
+        priority: "medium"
+      },
+      {
+        id: "video-promotionnelle",
+        title: "Video Promotionnelle",
+        description: "Tournage et montage professionnel pour votre marque.",
+        price: "A partir de 990 EUR",
+        badge: "",
+        priority: "high"
+      },
+      {
+        id: "photos-pro",
+        title: "Photos Professionnelles",
+        description: "Shooting photo pour produits, equipe et locaux.",
+        price: "A partir de 490 EUR",
+        badge: "",
+        priority: "low"
+      },
+      {
+        id: "newsletter",
+        title: "Newsletter & Email",
+        description: "Campagnes d'emailing et newsletters automatisees.",
+        price: "A partir de 290 EUR/mois",
+        badge: "",
+        priority: "low"
+      },
+      {
+        id: "chatbot",
+        title: "Chatbot & Automatisation",
+        description: "Assistant virtuel et automatisation des conversations.",
+        price: "A partir de 590 EUR",
+        badge: "Nouveau",
+        priority: "medium"
+      },
+      {
+        id: "branding",
+        title: "Branding & Identite",
+        description: "Logo, charte graphique et identite visuelle complete.",
+        price: "A partir de 1 290 EUR",
+        badge: "",
+        priority: "high"
+      },
+      {
+        id: "accompagnement",
+        title: "Accompagnement Strategique",
+        description: "Conseil et strategie digitale personnalisee mensuelle.",
+        price: "A partir de 790 EUR/mois",
+        badge: "",
+        priority: "high"
+      }
+    ];
+  }
+
+  // ============================================
+  // RENDU HTML
+  // ============================================
+  render() {
+    this.shadowRoot.innerHTML = `
+      <style>${this.getStyles()}</style>
+      <div class="mwl-container">
+        <!-- Barre de progression -->
+        <div class="mwl-progress-container">
+          <div class="mwl-progress-bar">
+            <div class="mwl-progress-fill" id="progressFill" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <!-- Ecran 1: Introduction -->
+        <div class="mwl-screen active" id="screen-intro">
+          <div class="mwl-intro-grid">
+            <div class="mwl-intro-left">
+              <h2>Decrivez votre projet en quelques mots</h2>
+              <p>Plus vous etes precis, plus je peux vous proposer une solution adaptee a vos besoins reels.</p>
+            </div>
+            <div class="mwl-intro-right">
+              <div class="mwl-textarea-wrapper">
+                <textarea class="mwl-textarea" id="projectDesc" placeholder="Ex: Je souhaite creer un site e-commerce pour vendre des produits artisanaux..."></textarea>
+              </div>
+              <button class="mwl-btn mwl-btn-primary" id="btn-start">
+                Continuer
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ecran 2: Loading -->
+        <div class="mwl-screen" id="screen-loading">
+          <div class="mwl-loading">
+            <div class="mwl-spinner"></div>
+            <p>Analyse de votre projet en cours...</p>
+          </div>
+        </div>
+
+        <!-- Ecran 3: Questions -->
+        <div class="mwl-screen" id="screen-questions">
+          <div class="mwl-question-card">
+            <div class="mwl-question-number" id="questionNumber">QUESTION 1/5</div>
+            <div class="mwl-question-text" id="questionText">Question en cours de chargement...</div>
+            <div class="mwl-answers-grid" id="answersGrid"></div>
+            <div class="mwl-question-nav">
+              <button class="mwl-btn-back" id="btn-question-back">Retour</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ecran 4: Recommandation -->
+        <div class="mwl-screen" id="screen-recommendation">
+          <div class="mwl-recommendation-card">
+            <div class="mwl-recommendation-label">Recommandation personnalisee</div>
+            <div class="mwl-recommendation-text" id="recommendationText">
+              Base sur vos reponses, je vous recommande une approche complete incluant un site web optimise, une strategie de contenu video et une presence renforcee sur les reseaux sociaux.
+            </div>
+            <div class="mwl-recommendation-actions">
+              <button class="mwl-btn mwl-btn-primary" id="btn-continue-services">Voir les services recommandes</button>
+              <button class="mwl-btn mwl-btn-outline" id="btn-skip-recommendation">Voir tous les services</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ecran 5: Services -->
+        <div class="mwl-screen" id="screen-services">
+          <div class="mwl-services-header">
+            <h2>Selectionnez vos services</h2>
+            <p>Cochez les services qui correspondent a vos besoins. Vous pourrez ajuster votre selection a tout moment.</p>
+          </div>
+          <div class="mwl-services-grid" id="servicesGrid"></div>
+          <div class="mwl-services-actions">
+            <button class="mwl-btn mwl-btn-outline" id="btn-services-back">Retour</button>
+            <button class="mwl-btn mwl-btn-primary" id="btn-continue-price">Voir le devis</button>
+          </div>
+        </div>
+
+        <!-- Ecran 6: Prix -->
+        <div class="mwl-screen" id="screen-price">
+          <div class="mwl-price-card">
+            <div class="mwl-price-header">
+              <h2>Votre estimation</h2>
+              <p>Base sur les services selectionnes</p>
+            </div>
+            <div class="mwl-price-grid" id="priceGrid"></div>
+            <div class="mwl-price-total">
+              <div class="mwl-price-total-left">
+                <div class="mwl-price-total-label">Investissement total estime</div>
+                <div class="mwl-price-total-amount" id="totalPrice">0 EUR</div>
+                <div class="mwl-price-total-detail" id="totalDetail">Selectionnez des services pour voir l'estimation</div>
+              </div>
+              <button class="mwl-price-total-btn" id="btn-contact">Demander un devis</button>
+            </div>
+            <div class="mwl-price-disclaimer">
+              Cette estimation est indicative. Un devis detaille vous sera envoye apres analyse complete de votre projet.
+            </div>
+            <div class="mwl-price-actions">
+              <button class="mwl-btn mwl-btn-outline" id="btn-price-back">Modifier ma selection</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ecran 7: Formulaire Contact -->
+        <div class="mwl-screen" id="screen-contact">
+          <div class="mwl-contact-card">
+            <div class="mwl-contact-header">
+              <h2>Finalisez votre demande</h2>
+              <p>Remplissez le formulaire ci-dessous pour recevoir votre devis personnalise</p>
+            </div>
+            <form class="mwl-contact-form" id="contactForm">
+              <div class="mwl-form-group">
+                <label class="mwl-form-label">Prenom <span class="required">*</span></label>
+                <input type="text" class="mwl-form-input" id="firstName" placeholder="Votre prenom" required>
+              </div>
+              <div class="mwl-form-group">
+                <label class="mwl-form-label">Nom <span class="required">*</span></label>
+                <input type="text" class="mwl-form-input" id="lastName" placeholder="Votre nom" required>
+              </div>
+              <div class="mwl-form-group">
+                <label class="mwl-form-label">Email <span class="required">*</span></label>
+                <input type="email" class="mwl-form-input" id="email" placeholder="votre@email.com" required>
+              </div>
+              <div class="mwl-form-group">
+                <label class="mwl-form-label">Telephone</label>
+                <input type="tel" class="mwl-form-input" id="phone" placeholder="+32 ...">
+              </div>
+              <div class="mwl-form-group full-width">
+                <label class="mwl-form-label">Nom de votre entreprise</label>
+                <input type="text" class="mwl-form-input" id="company" placeholder="Votre entreprise">
+              </div>
+              <div class="mwl-form-group full-width">
+                <label class="mwl-form-label">Message complementaire</label>
+                <textarea class="mwl-form-input" id="message" rows="3" placeholder="Des precisions sur votre projet..."></textarea>
+              </div>
+              <div class="mwl-contact-actions">
+                <button type="submit" class="mwl-btn mwl-btn-primary" id="btn-submit">Envoyer ma demande</button>
+              </div>
+            </form>
+            <div class="mwl-contact-back">
+              <button class="mwl-btn-back" id="btn-contact-back">Retour au devis</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
   }
 
   // ============================================
   // LOGIQUE
   // ============================================
   initLogic() {
-    const root = this.shadowRoot;
+    this.questions = this.getQuestions();
+    this.services = this.getServices();
 
-    // Bouton Start
-    root.getElementById('btnStart').addEventListener('click', () => this.startAnalysis());
+    // Ecran 1: Introduction
+    this.shadowRoot.getElementById('btn-start').addEventListener('click', () => {
+      this.state.projectDescription = this.shadowRoot.getElementById('projectDesc').value;
+      this.goToScreen('loading');
+      setTimeout(() => {
+        this.goToScreen('questions');
+        this.renderQuestion();
+      }, 1500);
+    });
 
-    // Boutons navigation
-    root.getElementById('btnBack').addEventListener('click', () => this.goBack());
-    root.getElementById('btnGoToServices').addEventListener('click', () => this.goToServices());
-    root.getElementById('btnBackToQuestions').addEventListener('click', () => this.goBackToQuestions());
-    root.getElementById('btnGoToPrice').addEventListener('click', () => this.goToPrice());
-    root.getElementById('btnBackToRec').addEventListener('click', () => this.goBackToRecommendation());
-    root.getElementById('btnBackToServices').addEventListener('click', () => this.goBackToServices());
-    root.getElementById('btnGoToContact').addEventListener('click', () => this.goToContact());
-    root.getElementById('btnBackToPrice').addEventListener('click', () => this.goBackToPrice());
+    // Ecran 3: Questions
+    this.shadowRoot.getElementById('btn-question-back').addEventListener('click', () => {
+      if (this.state.currentQuestionIndex > 0) {
+        this.state.currentQuestionIndex--;
+        this.renderQuestion();
+      } else {
+        this.goToScreen('intro');
+      }
+    });
 
-    // Formulaire
-    root.getElementById('contactForm').addEventListener('submit', (e) => this.submitContact(e));
+    // Ecran 4: Recommandation
+    this.shadowRoot.getElementById('btn-continue-services').addEventListener('click', () => {
+      this.goToScreen('services');
+      this.renderServices();
+    });
+    this.shadowRoot.getElementById('btn-skip-recommendation').addEventListener('click', () => {
+      this.goToScreen('services');
+      this.renderServices();
+    });
 
-    this.updateProgress();
+    // Ecran 5: Services
+    this.shadowRoot.getElementById('btn-services-back').addEventListener('click', () => {
+      this.goToScreen('recommendation');
+    });
+    this.shadowRoot.getElementById('btn-continue-price').addEventListener('click', () => {
+      this.goToScreen('price');
+      this.renderPrice();
+    });
+
+    // Ecran 6: Prix
+    this.shadowRoot.getElementById('btn-price-back').addEventListener('click', () => {
+      this.goToScreen('services');
+    });
+    this.shadowRoot.getElementById('btn-contact').addEventListener('click', () => {
+      this.goToScreen('contact');
+    });
+
+    // Ecran 7: Contact
+    this.shadowRoot.getElementById('btn-contact-back').addEventListener('click', () => {
+      this.goToScreen('price');
+    });
+    this.shadowRoot.getElementById('contactForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      this.handleSubmit();
+    });
   }
 
-  async sendToN8n(payload) {
-    console.log('[SIMULATION] Donnees envoyees a n8n:', payload);
-    return new Promise(resolve => setTimeout(() => resolve({ success: true, message: 'Recu par n8n (simulation)' }), 500));
-  }
+  goToScreen(screenName) {
+    const screens = ['intro', 'loading', 'questions', 'recommendation', 'services', 'price', 'contact'];
+    screens.forEach(s => {
+      const el = this.shadowRoot.getElementById('screen-' + s);
+      if (el) el.classList.remove('active');
+    });
+    const target = this.shadowRoot.getElementById('screen-' + screenName);
+    if (target) target.classList.add('active');
 
-  showScreen(screenId) {
-    const screens = this.shadowRoot.querySelectorAll('.mwl-screen');
-    screens.forEach(s => s.classList.remove('active'));
-    const screen = this.shadowRoot.getElementById(screenId);
-    if (screen) screen.classList.add('active');
-    this.updateProgress();
-  }
-
-  updateProgress() {
+    // Mettre a jour la barre de progression
+    const progressMap = {
+      'intro': 0,
+      'loading': 10,
+      'questions': 20,
+      'recommendation': 60,
+      'services': 70,
+      'price': 85,
+      'contact': 95
+    };
     const fill = this.shadowRoot.getElementById('progressFill');
-    const percentage = ((this.state.currentStep + 1) / this.state.totalSteps) * 100;
-    fill.style.width = percentage + '%';
-  }
-
-  startAnalysis() {
-    const desc = this.shadowRoot.getElementById('projectDescription').value.trim();
-    if (!desc) {
-      this.shadowRoot.getElementById('projectDescription').focus();
-      const wrapper = this.shadowRoot.querySelector('.mwl-textarea-wrapper');
-      wrapper.style.borderColor = '#dc2626';
-      setTimeout(() => wrapper.style.borderColor = '', 2000);
-      return;
-    }
-    this.state.projectDescription = desc;
-    this.state.currentStep = 1;
-    this.sendToN8n({ projectDescription: this.state.projectDescription, answers: this.state.answers, selectedServices: this.state.selectedServices, currentStep: this.state.currentStep });
-    this.showScreen('screen-loading');
-    setTimeout(() => {
-      this.state.currentStep = 2;
-      this.state.currentQuestionIndex = 0;
-      this.showScreen('screen-questions');
-      this.renderQuestion();
-    }, 1500);
+    if (fill) fill.style.width = (progressMap[screenName] || 0) + '%';
   }
 
   renderQuestion() {
-    const q = this.simulatedQuestions[this.state.currentQuestionIndex];
-    const total = this.simulatedQuestions.length;
-    this.shadowRoot.getElementById('questionNumber').textContent = 'Question ' + (this.state.currentQuestionIndex + 1) + ' / ' + total;
-    this.shadowRoot.getElementById('questionText').textContent = q.text;
+    const q = this.questions[this.state.currentQuestionIndex];
+    if (!q) {
+      this.goToScreen('recommendation');
+      return;
+    }
 
-    const container = this.shadowRoot.getElementById('answersContainer');
-    container.innerHTML = '';
+    this.shadowRoot.getElementById('questionNumber').textContent =
+      'QUESTION ' + (this.state.currentQuestionIndex + 1) + '/' + this.questions.length;
+    this.shadowRoot.getElementById('questionText').textContent = q.question;
 
-    q.answers.forEach(answer => {
+    const grid = this.shadowRoot.getElementById('answersGrid');
+    grid.innerHTML = '';
+
+    q.answers.forEach((answer, idx) => {
       const btn = document.createElement('button');
       btn.className = 'mwl-answer-btn';
       btn.innerHTML = '<span class="mwl-answer-indicator"></span><span>' + answer + '</span>';
-      btn.addEventListener('click', () => this.selectAnswer(q.id, q.text, answer));
-      container.appendChild(btn);
+      btn.addEventListener('click', () => {
+        this.state.answers[this.state.currentQuestionIndex] = answer;
+        if (this.state.currentQuestionIndex < this.questions.length - 1) {
+          this.state.currentQuestionIndex++;
+          this.renderQuestion();
+        } else {
+          this.goToScreen('recommendation');
+        }
+      });
+      grid.appendChild(btn);
     });
-
-    const btnBack = this.shadowRoot.getElementById('btnBack');
-    btnBack.style.visibility = this.state.currentQuestionIndex === 0 ? 'hidden' : 'visible';
-  }
-
-  selectAnswer(qid, qtext, answer) {
-    const existing = this.state.answers.findIndex(a => a.questionId === qid);
-    if (existing >= 0) {
-      this.state.answers[existing] = { questionId: qid, questionText: qtext, answer: answer };
-    } else {
-      this.state.answers.push({ questionId: qid, questionText: qtext, answer: answer });
-    }
-    this.sendToN8n({ projectDescription: this.state.projectDescription, answers: this.state.answers, selectedServices: this.state.selectedServices, currentStep: this.state.currentStep });
-    if (this.state.currentQuestionIndex < this.simulatedQuestions.length - 1) {
-      this.state.currentQuestionIndex++;
-      this.renderQuestion();
-    } else {
-      this.state.currentStep = 3;
-      this.showScreen('screen-recommendation');
-      this.shadowRoot.getElementById('recommendationText').textContent = this.simulatedRecommendation;
-    }
-  }
-
-  goBack() {
-    if (this.state.currentQuestionIndex > 0) {
-      this.state.currentQuestionIndex--;
-      this.state.answers.pop();
-      this.renderQuestion();
-    } else {
-      this.state.currentStep = 0;
-      this.showScreen('screen-intro');
-    }
-  }
-
-  goBackToQuestions() {
-    this.state.currentStep = 2;
-    this.showScreen('screen-questions');
-    this.renderQuestion();
-  }
-
-  goToServices() {
-    this.state.currentStep = 4;
-    this.showScreen('screen-services');
-    this.renderServices();
-  }
-
-  goBackToRecommendation() {
-    this.state.currentStep = 3;
-    this.showScreen('screen-recommendation');
   }
 
   renderServices() {
     const grid = this.shadowRoot.getElementById('servicesGrid');
     grid.innerHTML = '';
-    const services = this.SERVICES;
 
-    Object.keys(services).forEach(key => {
-      const service = services[key];
+    this.services.forEach(service => {
       const card = document.createElement('div');
-      card.className = 'mwl-service-card' + (service.recommended ? ' selected' : '');
-      card.dataset.serviceId = service.id;
+      card.className = 'mwl-service-card' + (this.state.selectedServices.includes(service.id) ? ' selected' : '');
+      card.dataset.id = service.id;
 
-      const isChecked = service.recommended ? 'checked' : '';
-      const priceText = service.type === 'monthly'
-        ? 'A partir de ' + service.prixMin + ' /mois'
-        : 'Entre ' + service.prixMin + ' et ' + service.prixMax + '';
-
-      const badgeHtml = service.recommended ? '<div class="mwl-service-badge">Recommande</div>' : '';
+      let badgeHtml = '';
+      if (service.badge) {
+        badgeHtml = '<div class="mwl-service-badge">' + service.badge + '</div>';
+      }
 
       card.innerHTML = badgeHtml +
-        '<input type="checkbox" ' + isChecked + '>' +
+        '<input type="checkbox"' + (this.state.selectedServices.includes(service.id) ? ' checked' : '') + '>' +
         '<div class="mwl-service-title">' + service.title + '</div>' +
         '<div class="mwl-service-desc">' + service.description + '</div>' +
-        '<div class="mwl-service-price">' + priceText + '</div>';
+        '<div class="mwl-service-price">' + service.price + '</div>';
 
       card.addEventListener('click', (e) => {
-        if (e.target.type !== 'checkbox' && !e.target.classList.contains('mwl-service-badge')) {
-          const cb = card.querySelector('input[type="checkbox"]');
-          cb.checked = !cb.checked;
-          this.toggleService(service.id);
+        if (e.target.tagName === 'INPUT') {
+          e.stopPropagation();
+        }
+        const checkbox = card.querySelector('input[type="checkbox"]');
+        checkbox.checked = !checkbox.checked;
+
+        if (checkbox.checked) {
+          if (!this.state.selectedServices.includes(service.id)) {
+            this.state.selectedServices.push(service.id);
+          }
+          card.classList.add('selected');
+        } else {
+          this.state.selectedServices = this.state.selectedServices.filter(id => id !== service.id);
+          card.classList.remove('selected');
         }
       });
 
-      const cb = card.querySelector('input[type="checkbox"]');
-      cb.addEventListener('change', () => this.toggleService(service.id));
-
       grid.appendChild(card);
     });
-
-    this.state.selectedServices = Object.keys(services).filter(k => services[k].recommended).map(k => services[k].id);
-  }
-
-  toggleService(serviceId) {
-    const idx = this.state.selectedServices.indexOf(serviceId);
-    const card = this.shadowRoot.querySelector('[data-service-id="' + serviceId + '"]');
-    if (idx >= 0) {
-      this.state.selectedServices.splice(idx, 1);
-      if (card) card.classList.remove('selected');
-    } else {
-      this.state.selectedServices.push(serviceId);
-      if (card) card.classList.add('selected');
-    }
-  }
-
-  goToPrice() {
-    if (this.state.selectedServices.length === 0) {
-      alert('Veuillez selectionner au moins un service.');
-      return;
-    }
-    this.state.currentStep = 5;
-    this.showScreen('screen-price');
-    this.renderPrice();
-  }
-
-  goBackToServices() {
-    this.state.currentStep = 4;
-    this.showScreen('screen-services');
   }
 
   renderPrice() {
-    const prices = this.calculatePricesByPriority();
-    const services = this.SERVICES;
+    const priceGrid = this.shadowRoot.getElementById('priceGrid');
+    priceGrid.innerHTML = '';
 
-    // Prioritaire
-    let pServices = [], pMin = 0, pMax = 0;
-    this.state.selectedServices.forEach(sid => {
-      const s = services[sid];
-      if (s && s.priority === 'high' && s.type === 'one-shot') {
-        pServices.push(s.title);
-        pMin += s.prixMin;
-        pMax += s.prixMax;
-      }
-    });
-    this.shadowRoot.getElementById('pricePriority').textContent = pMax > 0 ? 'Entre ' + pMin + ' et ' + pMax + '' : '0 ';
-    this.shadowRoot.getElementById('pricePriorityDetail').textContent = pServices.length > 0 ? pServices.join(', ') : 'Aucun service prioritaire selectionne';
+    const selected = this.services.filter(s => this.state.selectedServices.includes(s.id));
 
-    // Secondaire
-    let sServices = [], sMin = 0, sMax = 0;
-    this.state.selectedServices.forEach(sid => {
-      const s = services[sid];
-      if (s && s.priority === 'medium' && s.type === 'one-shot') {
-        sServices.push(s.title);
-        sMin += s.prixMin;
-        sMax += s.prixMax;
-      }
-    });
-    this.shadowRoot.getElementById('priceSecondary').textContent = sMax > 0 ? 'Entre ' + sMin + ' et ' + sMax + '' : '0 ';
-    this.shadowRoot.getElementById('priceSecondaryDetail').textContent = sServices.length > 0 ? sServices.join(', ') : 'Aucun service secondaire selectionne';
-
-    // Mensuel
-    let mServices = [], mMin = 0, mMax = 0;
-    this.state.selectedServices.forEach(sid => {
-      const s = services[sid];
-      if (s && s.type === 'monthly') {
-        mServices.push(s.title);
-        mMin += s.prixMin;
-        mMax += s.prixMax;
-      }
-    });
-    this.shadowRoot.getElementById('priceMonthly').textContent = mMax > 0 ? 'Entre ' + mMin + ' et ' + mMax + ' /mois' : '0 /mois';
-    this.shadowRoot.getElementById('priceMonthlyDetail').textContent = mServices.length > 0 ? mServices.join(', ') : 'Aucun service mensuel selectionne';
-
-    // Total
-    const totalMin = pMin + sMin;
-    const totalMax = pMax + sMax;
-    this.shadowRoot.getElementById('priceTotal').textContent = totalMax > 0 ? 'Entre ' + totalMin + ' et ' + totalMax + '' : '0 ';
-    this.shadowRoot.getElementById('priceTotalDetail').textContent = mMax > 0 ? '+ ' + mMin + ' a ' + mMax + ' /mois d'accompagnement' : 'Sans accompagnement mensuel';
-
-    this.sendToN8n({ projectDescription: this.state.projectDescription, answers: this.state.answers, selectedServices: this.state.selectedServices, currentStep: this.state.currentStep });
-  }
-
-  calculatePricesByPriority() {
-    const result = { high: { min: 0, max: 0 }, medium: { min: 0, max: 0 }, low: { min: 0, max: 0 } };
-    const services = this.SERVICES;
-    this.state.selectedServices.forEach(sid => {
-      const s = services[sid];
-      if (s && s.type === 'one-shot') {
-        result[s.priority].min += s.prixMin;
-        result[s.priority].max += s.prixMax;
-      }
-    });
-    return result;
-  }
-
-  goToContact() {
-    this.state.currentStep = 6;
-    this.state.totalSteps = 7;
-    this.showScreen('screen-contact');
-  }
-
-  goBackToPrice() {
-    this.state.currentStep = 5;
-    this.state.totalSteps = 6;
-    this.showScreen('screen-price');
-  }
-
-  submitContact(event) {
-    event.preventDefault();
-    const name = this.shadowRoot.getElementById('contactName').value.trim();
-    const email = this.shadowRoot.getElementById('contactEmail').value.trim();
-    const phone = this.shadowRoot.getElementById('contactPhone').value.trim();
-    const site = this.shadowRoot.getElementById('contactSite').value.trim();
-
-    if (!name || !email || !phone || !site) {
-      alert('Veuillez remplir tous les champs obligatoires.');
+    if (selected.length === 0) {
+      this.shadowRoot.getElementById('totalPrice').textContent = '0 EUR';
+      this.shadowRoot.getElementById('totalDetail').textContent = 'Aucun service selectionne';
       return;
     }
 
-    const prices = this.calculatePricesByPriority();
-    const monthly = { min: 0, max: 0 };
-    const services = this.SERVICES;
-    this.state.selectedServices.forEach(sid => {
-      const s = services[sid];
-      if (s && s.type === 'monthly') {
-        monthly.min += s.prixMin;
-        monthly.max += s.prixMax;
-      }
+    const priorities = { high: [], medium: [], low: [] };
+    selected.forEach(s => {
+      if (priorities[s.priority]) priorities[s.priority].push(s);
     });
 
-    const payload = {
-      projectDescription: this.state.projectDescription,
-      answers: this.state.answers,
-      selectedServices: this.state.selectedServices,
-      priceEstimate: { priority: prices.high, secondary: prices.medium, monthly: monthly },
-      contact: { name, email, phone, site },
-      currentStep: this.state.currentStep
+    const priorityLabels = {
+      high: { label: 'Prioritaires', badge: 'Essentiel', class: 'priority-high' },
+      medium: { label: 'Recommandes', badge: 'Conseille', class: 'priority-medium' },
+      low: { label: 'Optionnels', badge: 'Bonus', class: 'priority-low' }
     };
 
-    this.sendToN8n(payload);
-    alert('Votre demande de pre-devis a ete envoyee ! Nous vous recontacterons sous 24h.\n\n(Simulation — en production, cela enverrait les donnees a n8n)');
+    Object.keys(priorities).forEach(p => {
+      const items = priorities[p];
+      if (items.length === 0) return;
+
+      const section = document.createElement('div');
+      section.className = 'mwl-price-section ' + priorityLabels[p].class;
+
+      const itemNames = items.map(i => i.title).join(', ');
+      section.innerHTML =
+        '<div class="mwl-price-section-header">' +
+        '<span class="mwl-price-section-label">' + priorityLabels[p].label + '</span>' +
+        '<span class="mwl-price-section-badge">' + priorityLabels[p].badge + '</span>' +
+        '</div>' +
+        '<div class="mwl-price-section-detail">' + itemNames + '</div>';
+
+      priceGrid.appendChild(section);
+    });
+
+    this.shadowRoot.getElementById('totalPrice').textContent = selected.length + ' service' + (selected.length > 1 ? 's' : '') + ' selectionne' + (selected.length > 1 ? 's' : '');
+    this.shadowRoot.getElementById('totalDetail').textContent = 'Devis personnalise sur demande';
+  }
+
+  async handleSubmit() {
+    const formData = {
+      projectDescription: this.state.projectDescription,
+      answers: this.state.answers,
+      selectedServices: this.state.selectedServices.map(id => {
+        const s = this.services.find(sv => sv.id === id);
+        return s ? s.title : id;
+      }),
+      firstName: this.shadowRoot.getElementById('firstName').value,
+      lastName: this.shadowRoot.getElementById('lastName').value,
+      email: this.shadowRoot.getElementById('email').value,
+      phone: this.shadowRoot.getElementById('phone').value,
+      company: this.shadowRoot.getElementById('company').value,
+      message: this.shadowRoot.getElementById('message').value,
+      timestamp: new Date().toISOString()
+    };
+
+    try {
+      const response = await fetch(this.N8N_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+
+      if (response.ok) {
+        alert('Votre demande a ete envoyee avec succes ! Je vous recontacte dans les 24h.');
+        this.resetConfigurator();
+      } else {
+        alert('Erreur lors de l\'envoi. Veuillez reessayer.');
+      }
+    } catch (error) {
+      console.error('Erreur:', error);
+      alert('Erreur de connexion. Veuillez verifier votre connexion internet et reessayer.');
+    }
+  }
+
+  resetConfigurator() {
+    this.state = {
+      currentStep: 0,
+      totalSteps: 6,
+      projectDescription: '',
+      answers: [],
+      selectedServices: [],
+      currentQuestionIndex: 0
+    };
+    this.shadowRoot.getElementById('projectDesc').value = '';
+    this.shadowRoot.getElementById('contactForm').reset();
+    this.goToScreen('intro');
   }
 }
 
