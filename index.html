@@ -6,36 +6,23 @@
 <title>Morewless Configurateur</title>
 <script src="https://jonathanbellepro-a11y.github.io/morewless-configurateur/morewless-configurateur.js"></script>
 <style>
-    body { 
-        margin: 0; 
-        padding: 0; 
-        overflow: hidden; 
-        background: white; 
-    }
-    morewless-configurateur { 
-        display: block; 
-        width: 100%; 
-    }
+  body { margin: 0; padding: 0; overflow: hidden; background: white; }
+  morewless-configurateur { display: block; width: 100%; }
 </style>
+<base target="_blank">
 </head>
 <body>
 <morewless-configurateur></morewless-configurateur>
 <script>
-    function sendHeight() {
-        const height = document.documentElement.scrollHeight || document.body.scrollHeight;
-        window.parent.postMessage({ type: 'morewless-resize', height: height }, '*');
-    }
-
-    // Envoyer la hauteur régulièrement
-    setInterval(sendHeight, 500);
-    sendHeight();
-
-    // Écouter les changements de taille
-    window.addEventListener('resize', sendHeight);
-
-    // Observer les mutations du DOM
-    const observer = new MutationObserver(sendHeight);
-    observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+  function sendHeight() {
+    const height = document.documentElement.scrollHeight || document.body.scrollHeight;
+    window.parent.postMessage({ type: 'morewless-resize', height: height }, '*');
+  }
+  setInterval(sendHeight, 500);
+  sendHeight();
+  window.addEventListener('resize', sendHeight);
+  const observer = new MutationObserver(sendHeight);
+  observer.observe(document.body, { childList: true, subtree: true, attributes: true });
 </script>
 </body>
 </html>
